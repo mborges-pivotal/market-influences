@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:layout="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.w3.org/1999/xhtml"
+>
+  <head>
+    <title>Influence</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- CSS Dependencies -->
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/webjars/font-awesome/css/all.min.css" rel="stylesheet" />
+
+    <!-- DataTables -->
+    <link
+      href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        padding-top: 70px;
+        /* font-size: 16px; */
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <!--header.html  that's here  -->
+    <div th:replace="fragments/header :: header"></div>
+
+    <div class="container-fluid">
+      <div layout:fragment="content"></div>
+    </div>
+
+    <!--footer.html  that's here  -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <!-- Optional JavaScript -->
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/popper.js/umd/popper.min.js"></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
+    <th:block layout:fragment="page-scripts"></th:block>
+  </body>
+</html>

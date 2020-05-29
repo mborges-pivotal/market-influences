@@ -1,0 +1,32 @@
+<th:block th:fragment="page(page, key, value)" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <table class="table table-hover m-2 table-bordered" th:id="${page.name} + 'Id' ">
+        <thead>
+            <tr>
+                <th scope="col" th:text="${key}">key</th>
+                <th scope="col" th:text="${value}">value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:id="${row.key}"  th:each="row,iter: ${page.rows}">
+                <td th:text="${row.key}">Mark</td>
+                <td th:text="${row.value}">Otto</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${page.previous} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/persona(page=${page.previous})}" th:attrappend="tabindex=${page.previous == null}?'-1'">Previous</a>
+            </li>
+            <li class="page-item active">
+                    <a class="page-link" href="#" th:inline="text">[[${page.number}]] / [[${page.totalRowCount / page.size}]] <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="page-item" th:classappend="${page.next} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/persona(page=${page.next})}" th:attrappend="tabindex=${page.next == null}?'-1'">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+</th:block>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html
+  xmlns:layout="http://www.w3.org/1999/xhtml"
+  layout:decorate="~{fragments/main_layout}"
+>
+  <head> </head>
+
+  <body>
+    <div layout:fragment="content" class="container-fluid">
+      <div class="row m-2">
+        <div class="card text-center">
+          <div class="card-header" th:text="${feed.name}"/>
+          <div class="card-body">
+            <h5 class="card-title" th:text="${doc.title}" />
+            <p class="card-text" th:text="${doc.title}" />
+            <a
+              th:text="Back"
+              th:href="@{/news(feedId=${feed.id})}"
+              class="btn btn-primary"
+            />
+            <a
+              th:text="Link"
+              th:href="${doc.link}"
+              target="_blank"
+              class="btn btn-primary"
+            />
+          </div>
+          <div
+            class="card-footer text-muted"
+            th:text="${#temporals.format(doc.publishedDate, 'E, LLL-dd-yyyy h:mm a')}"
+          />
+        </div>
+      </div>
+
+      <div class="row m-2">
+        <div class="card shadow">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+              Market Feeds
+            </h6>
+          </div>
+          <div class="card-body">
+            <nav>
+              <div class="nav nav-pills mb-3" id="v-pills-tab" role="tablist">
+                <a
+                  class="nav-link active"
+                  id="v-pills-content-tab"
+                  data-toggle="pill"
+                  href="#v-pills-content"
+                  role="tab"
+                  aria-controls="v-pills-content"
+                  aria-selected="true"
+                  >content</a
+                >
+                <a
+                  class="nav-link"
+                  id="v-pills-media-tab"
+                  data-toggle="pill"
+                  href="#v-pills-media"
+                  role="tab"
+                  aria-controls="v-pills-media"
+                  aria-selected="false"
+                  >media</a
+                >
+                <a
+                  class="nav-link"
+                  id="v-pills-link-tab"
+                  data-toggle="pill"
+                  href="#v-pills-link"
+                  role="tab"
+                  aria-controls="v-pills-link"
+                  aria-selected="false"
+                  >link</a
+                >
+                <a
+                  class="nav-link"
+                  id="v-pills-import-tab"
+                  data-toggle="pill"
+                  href="#v-pills-import"
+                  role="tab"
+                  aria-controls="v-pills-import"
+                  aria-selected="false"
+                  >import</a
+                >
+              </div>
+            </nav>
+            <div class="tab-content" id="v-pills-tabContent">
+              <div
+                class="tab-pane fade show active"
+                id="v-pills-content"
+                role="tabpanel"
+                aria-labelledby="v-pills-content-tab"
+              >
+                <table
+                  id="tcontent"
+                  class="table table-striped table-bordered table-responsive"
+                  style="width: 100%;"
+                >
+                  <thead>
+                    <th>tag</th>
+                    <th>text</th>
+                  </thead>
+                  <tbody>
+                    <tr th:each="content: ${doc.content}">
+                      <td th:text="${content.tag}" />
+                      <td th:text="${content.text}" />
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="v-pills-media"
+                role="tabpanel"
+                aria-labelledby="v-pills-media-tab"
+              >
+                <table
+                  id="tmedia"
+                  class="table table-striped table-bordered table-responsive"
+                  style="width: 100%;"
+                >
+                  <thead>
+                    <th>tag</th>
+                    <th>text</th>
+                  </thead>
+                  <tbody>
+                    <tr th:each="media: ${doc.media}">
+                      <td th:text="${media.tag}" />
+                      <td>
+                        <!-- <a th:if="${media instanceof T(com.borgescloud.markets.news.model.NewsView.Image)}" class="btn" rel="popover" th:data-img="${media.src}" th:text="${media.src}"/> -->
+                        <a th:if="${media instanceof T(com.borgescloud.markets.news.model.NewsView.Image)}"  th:href="${media.src}" target="_blank" th:text="${media.src}"/>
+                        <span th:unless="${media instanceof T(com.borgescloud.markets.news.model.NewsView.Image)}" th:text="${media.src}" />
+                      </td>
+                      </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="v-pills-link"
+                role="tabpanel"
+                aria-labelledby="v-pills-link-tab"
+              >
+                <table
+                  id="tlink"
+                  class="table table-striped table-bordered table-responsive"
+                  style="width: 100%;"
+                >
+                  <thead>
+                    <th>tag</th>
+                    <th>text</th>
+                    <th>href</th>
+                  </thead>
+                  <tbody>
+                    <tr th:each="link: ${doc.links}">
+                      <td th:text="${link.tag}" />
+                      <td th:text="${link.text}" />
+                      <td th:text="${link.href}" />
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="v-pills-import"
+                role="tabpanel"
+                aria-labelledby="v-pills-import-tab"
+              >
+                <table
+                  id="timport"
+                  class="table table-striped table-bordered table-responsive"
+                  style="width: 100%;"
+                >
+                  <thead>
+                    <th>tag</th>
+                    <th>href</th>
+                    <th>rel</th>
+                  </thead>
+                  <tbody>
+                    <tr th:each="import: ${doc.imports}">
+                      <td th:text="${import.tag}" />
+                      <td th:text="${import.href}" />
+                      <td th:text="${import.rel}" />
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <th:block layout:fragment="page-scripts">
+
+      <script th:inline="javascript">
+        // Add custom JS here
+        $('a[rel=popover]').popover({
+          html: true,
+          trigger: 'hover',
+          placement: 'bottom',
+          content: function(){
+            return '<img src="'+$(this).data('img') + '" />';
+          }
+        });        
+      </script>
+
+      <script th:inline="javascript">
+        $(document).ready(function () {
+          $("#tcontent").DataTable();
+          $("#tmedia").DataTable();
+          $("#tlink").DataTable();
+          $("#timport").DataTable();
+        });
+
+      </script>
+    </th:block>
+  </body>
+</html>

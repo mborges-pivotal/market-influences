@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html
+  xmlns:layout="http://www.w3.org/1999/xhtml"
+  layout:decorate="~{fragments/main_layout}"
+>
+  <head>
+    <title>Feeds</title>
+  </head>
+
+  <body>
+    
+    <div layout:fragment="content" class="container-fluid">
+      <div class="row">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+              Market Feeds
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table
+                id="feeds"
+                class="table table-striped table-bordered"
+                style="width: 100%;"
+              >
+                <thead>
+                  <th>id</th>
+                  <th>name</th>
+                  <th>url</th>
+                  <th>Actions</th>
+                </thead>
+                <tbody>
+                  <tr th:each="feed: ${feeds}" th:id="'rec-' + ${feed.id}">
+                    <td th:text="${feed.id}" />
+                    <td>
+                      <a
+                        th:text="${feed.name}"
+                        th:href="@{/news(feedId=${feed.id})}"
+                      ></a>
+                    </td>
+                    <td>
+                      <a
+                        th:text="${feed.url}"
+                        th:href="${feed.url}"
+                        target="_blank"
+                      ></a>
+                    </td>
+                    <td>
+                      <a
+                        class="btn btn-danger delete-record"
+                        th:attr="data-id=${feed.id}"
+                        ><span style="color: white;"
+                          ><i class="fas fa-trash-alt white"></i></span
+                      ></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <th:block layout:fragment="page-scripts">
+      <script th:inline="javascript">
+        $(document).ready(function () {
+          $("#feeds").DataTable();
+        });
+      </script>
+
+      <script th:inline="javascript">
+        // var s = /*[[${stores}]]*/ null;
+
+        jQuery(document).delegate("a.delete-record", "click", function (e) {
+          e.preventDefault();
+          var didConfirm = confirm("Are you sure You want to delete");
+          if (didConfirm == true) {
+            var id = jQuery(this).attr("data-id");
+            var targetDiv = jQuery(this).attr("targetDiv");
+
+            $.ajax({
+              url: "/api/feed/" + id,
+              type: "DELETE",
+              success: function (result) {
+                jQuery("#rec-" + id).remove();
+              },
+            });
+
+            return true;
+          } else {
+            return false;
+          }
+        });
+      </script>
+    </th:block>
+  </body>
+</html>
