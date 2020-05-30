@@ -7,10 +7,10 @@ import javax.persistence.EntityManager;
 import com.borgescloud.markets.news.model.News;
 import com.borgescloud.markets.news.model.NewsView;
 import com.borgescloud.markets.news.model.NewsView.Content;
-import com.borgescloud.markets.news.model.NewsView.Media;
 import com.borgescloud.markets.news.model.NewsView.Image;
 import com.borgescloud.markets.news.model.NewsView.Import;
 import com.borgescloud.markets.news.model.NewsView.Link;
+import com.borgescloud.markets.news.model.NewsView.Media;
 import com.borgescloud.markets.news.repository.NewsRepository;
 
 import org.apache.lucene.search.Query;
@@ -53,6 +53,11 @@ public class NewsService {
         return newsRepo.findAll();
     }
 
+    @GetMapping("/count")
+    public long count() {
+        return newsRepo.count();
+    }
+
     @GetMapping("/{id}")
     public News findById(@PathVariable long id) {
         return newsRepo.findById(id).orElseThrow(() -> new Error(String.format("News with id '%s' not found", id)));
@@ -91,7 +96,7 @@ public class NewsService {
         // returns JPA managed entities
         List<News> articles = fullTextQuery.getResultList();
 
-        log.info("Found articles: " + articles);
+        log.info("Found {} articles", articles.size());
         return articles;
         
     }
@@ -112,43 +117,43 @@ public class NewsService {
             Elements imports = doc.select("link[href]");
             Elements contentTags = doc.select("p, h1, h2, h3, h4, h5, h6");
 
-            print("\nBody: (%d)", body.size());
+            log.debug("Body: ({})", body.size());
             for (Element src : body) {
                 if (src.hasAttr("src")) {
                     continue;
                 }
-                print(" * %s: <%s>", src.tagName(), src.attr("class"));
+                log.debug(" * {}: <{}>", src.tagName(), src.attr("class"));
             }
 
-            print("\nContent: (%d)", contentTags.size());
+            log.debug("Content: ({})", contentTags.size());
             for (Element src : contentTags) {
-                print(" * %s: <%s>", src.tagName(), src.text());
+                log.debug(" * {}: <{}>", src.tagName(), src.text());
                 news.addContent(Content.builder().tag(src.tagName()).text(src.text()).build());
             }
 
-            print("\nMedia: (%d)", media.size());
+            log.debug("Media: ({})", media.size());
             for (Element src : media) {
 
                 if (src.normalName().equals("img")) {
-                    print(" * %s: <%s> %sx%s (%s)", src.tagName(), src.attr("abs:src"), src.attr("width"),
+                    log.debug(" * {}: <{}> {}x{} (%s)", src.tagName(), src.attr("abs:src"), src.attr("width"),
                             src.attr("height"), trim(src.attr("alt"), 20));
                     news.addMedia(Image.builder().tag(src.tagName()).src(src.attr("abs:src")).height(src.attr("height"))
                             .width(src.attr("width")).alt(src.attr("alt")).build());
                 } else {
-                    print(" * %s: <%s>", src.tagName(), src.attr("abs:src"));
+                    log.debug(" * {}: <{}>", src.tagName(), src.attr("abs:src"));
                     news.addMedia(Media.builder().tag(src.tagName()).src(src.attr("abs:src")).build());
                 }
             } // for
 
-            print("\nImports: (%d)", imports.size());
+            log.debug("Imports: ({})", imports.size());
             for (Element i : imports) {
-                print(" * %s <%s> (%s)", i.tagName(), i.attr("abs:href"), i.attr("rel"));
+                log.debug(" * {} <{}> ({})", i.tagName(), i.attr("abs:href"), i.attr("rel"));
                 news.addImport(Import.builder().tag(i.tagName()).href(i.attr("abs:href")).rel(i.attr("rel")).build());
             }
 
-            print("\nLinks: (%d)", links.size());
+            log.debug("Links: ({})", links.size());
             for (Element l : links) {
-                print(" * a: <%s>  (%s)", l.attr("abs:href"), trim(l.text(), 35));
+                log.debug(" * a: <{}>  ({})", l.attr("abs:href"), trim(l.text(), 35));
                 news.addLink(Link.builder().tag(l.tagName()).text(trim(l.text(), 35)).href(l.attr("abs:href")).build());
             }
 
@@ -157,10 +162,6 @@ public class NewsService {
         } catch (Exception e2) {
             e2.printStackTrace();
         }
-    }
-
-    private static void print(String msg, Object... args) {
-        System.out.println(String.format(msg, args));
     }
 
     private static String trim(String s, int width) {

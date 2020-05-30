@@ -57,6 +57,11 @@ public class FeedService {
         return feedRepo.findAll();
     }
 
+    @GetMapping("/count")
+    public long count() {
+        return feedRepo.count();
+    }
+
     @GetMapping("/{id}")
     public Feed findById(@PathVariable long id) {
         return feedRepo.findById(id).orElseThrow(() -> new Error(String.format("Feed with id '%s' not found", id)));

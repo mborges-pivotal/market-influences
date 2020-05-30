@@ -1,4 +1,4 @@
-package com.borgescloud.markets.news.web;
+package com.borgescloud.markets.web;
 
 import java.io.IOException;
 
@@ -30,6 +30,8 @@ public class NewsController {
     @GetMapping("/")
     public String index(final Model model) {
         model.addAttribute("appName", applicationName);
+        model.addAttribute("feedCount", feedSrvc.count());
+        model.addAttribute("newsCount", newsSrvc.count());
         return "index";
     }
 
