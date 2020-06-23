@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class NewsController {
+public class NewsController extends BaseController {
 
     private FeedService feedSrvc;
     private NewsService newsSrvc;
@@ -25,14 +25,6 @@ public class NewsController {
     public NewsController(FeedService feedSrvc, NewsService newsSrvc) {
         this.feedSrvc = feedSrvc;
         this.newsSrvc = newsSrvc;
-    }
-
-    @GetMapping("/")
-    public String index(final Model model) {
-        model.addAttribute("appName", applicationName);
-        model.addAttribute("feedCount", feedSrvc.count());
-        model.addAttribute("newsCount", newsSrvc.count());
-        return "index";
     }
 
     @GetMapping("/feeds")

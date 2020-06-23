@@ -18,11 +18,11 @@ public class BasicConfiguration extends WebSecurityConfigurerAdapter {
           PasswordEncoderFactories.createDelegatingPasswordEncoder();
         auth
           .inMemoryAuthentication()
-          .withUser("user")
-          .password(encoder.encode("password"))
+          .withUser("user@borgescloud.com")
+          .password(encoder.encode("user"))
           .roles("USER")
           .and()
-          .withUser("admin")
+          .withUser("admin@borgescloud.com")
           .password(encoder.encode("admin"))
           .roles("USER", "ADMIN");
     }
@@ -31,9 +31,14 @@ public class BasicConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
           .authorizeRequests()
+          .antMatchers("/", "/index.html", "/search").permitAll()
+          .antMatchers("/webjars/**", "/css/**", "/js/**", "/images/**").permitAll()
+          .antMatchers("/management/health", "/management/info").permitAll()
           .anyRequest()
           .authenticated()
           .and()
-          .httpBasic();
+          .formLogin().loginPage("/login.html").failureUrl("/login-error.html").permitAll()
+          .and()
+          .logout().invalidateHttpSession(true).deleteCookies("JSESSIONID");
     }
 }

@@ -7,3 +7,6 @@ Goals
 ## References
 * datahub.io
 * https://finnhub.io/
+* https://www.marcobehler.com/guides/spring-security
+* https://www.baeldung.com/spring-security-thymeleaf
+* https://ducmanhphan.github.io/2019-02-22-Logout-in-Spring-Boot/

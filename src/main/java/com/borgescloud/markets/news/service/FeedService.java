@@ -147,32 +147,37 @@ public class FeedService {
         return (d != null ? d.getValue() : "");
     }
 
-    private void troubleshoot(Feed feed) throws IOException {
+    private void troubleshoot(Feed feed) {
 
         log.info("==================================================");
         log.info("==== {} ====", feed.getUrl());
-        URL url = new URL(feed.getUrl());
-        URLConnection urlcon = url.openConnection();
 
-        // To get a map of all the fields of http header
-        Map<String, List<String>> header = urlcon.getHeaderFields();
+        try {
+            URL url = new URL(feed.getUrl());
+            URLConnection urlcon = url.openConnection();
 
-        // print all the fields along with their value.
-        for (Map.Entry<String, List<String>> mp : header.entrySet()) {
-            System.out.print(mp.getKey() + " : ");
-            System.out.println(mp.getValue().toString());
-        }
-        System.out.println();
-        System.out.println("Complete source code of the URL is-");
-        System.out.println("---------------------------------");
+            // To get a map of all the fields of http header
+            Map<String, List<String>> header = urlcon.getHeaderFields();
 
-        // get the inputstream of the open connection.
-        BufferedReader br = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
-        String i;
+            // print all the fields along with their value.
+            for (Map.Entry<String, List<String>> mp : header.entrySet()) {
+                System.out.print(mp.getKey() + " : ");
+                System.out.println(mp.getValue().toString());
+            }
+            System.out.println();
+            System.out.println("Complete source code of the URL is-");
+            System.out.println("---------------------------------");
 
-        // print the source code line by line.
-        while ((i = br.readLine()) != null) {
-            System.out.println(i);
+            // get the inputstream of the open connection.
+            BufferedReader br = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
+            String i;
+
+            // print the source code line by line.
+            while ((i = br.readLine()) != null) {
+                System.out.println(i);
+            }
+        } catch (IOException ioe) {
+            log.error("Issues with feed " + feed, ioe);
         }
         log.info("==================================================");
     }
